@@ -4,20 +4,22 @@
 // declaring deck
 const deck = document.querySelector('.deck');
 
+// opend cards
+let opendCards = [];
+
 // declaring cards
-const card = document.getElementsByClassName('card');
+let card = document.querySelectorAll('.card');
+let x = document.getElementsByClassName('card');
+console.log(x);
+console.log(card);
 
-/*
- * Display the cards on the page
- *   - shuffle the list of cards using the provided "shuffle" method below
- *   - loop through each card and create its HTML
- *   - add each card's HTML to the page
- */
 
+// initate the game
 function startGame(){
-   let cards = shuffle(card);
+   let cards = shuffle([...card]);
+   console.log(cards[0]);
+   console.log([...card][0]);
    deck.innerHtml = "";
-   console.log(cards.length);
    for (let i=0; i<cards.length; i++){
      deck.innerHtml = "";
      [].forEach.call(cards, function(item) {
@@ -26,10 +28,19 @@ function startGame(){
      cards[i].classList.remove("show", "open", "match", "disabled");
    }
 
+   // adding event listeners for cards
+   for (card of cards){
+     card.addEventListener("click", (event)=>{
+           console.log(event.target);
+           clickedCard(event.target);
+     });
+   }
+
 }
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
+    console.log("i'm workinng >>>>>> !");
     var currentIndex = array.length, temporaryValue, randomIndex;
 
     while (currentIndex !== 0) {
@@ -52,10 +63,29 @@ function shuffle(array) {
  *    + if the cards do match, lock the cards in the open position (put this functionality in another function that you call from this one)
  *    + if the cards do not match, remove the cards from the list and hide the card's symbol (put this functionality in another function that you call from this one)
  *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
- *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
+ *    + if all cards have  matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
 
 
+function clickedCard(card){
+   card.classList.add("show");
+   addToOpendCards(card);
+}
 
-// stat the game when the body finishes loading .. 
+function addToOpendCards(card){
+  opendCards.push(card);
+  console.log(opendCards);
+  console.log(opendCards.length);
+      switch (opendCards.length) {
+        case 2: if (opendCards[0].lastElementChild.className === opendCards[1].lastElementChild.className){
+          console.log("matched :)");
+          }else{
+          console.log("sorry not matched!");
+          }
+          break;
+        }
+   }
+
+
+// stat the game when the body finishes loading ..
 document.body.onload = startGame();
