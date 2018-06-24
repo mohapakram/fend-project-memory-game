@@ -1,11 +1,12 @@
-/*
- * Create a list that holds all of your cards
- */
+
 // declaring deck
 const deck = document.querySelector('.deck');
 
 // opend cards
-let opendCards = [];
+var opendCards = [];
+
+// moves
+let moves = 0;
 
 // declaring cards
 let card = document.querySelectorAll('.card');
@@ -29,14 +30,55 @@ function startGame(){
    }
 
    // adding event listeners for cards
-   for (card of cards){
-     card.addEventListener("click", (event)=>{
-           console.log(event.target);
-           clickedCard(event.target);
+
+     deck.addEventListener("click", (event)=>{
+       let card = event.target;
+       console.log(opendCards);
+          if ( isClickValid(card) ) {
+            clickedCard(card);
+            checkForMatch();
+            checkScore();
+          }
+
      });
-   }
+
 
 }
+
+function isClickValid(card){
+  return(
+      card.classList.contains("card")
+      &&
+      !card.classList.contains("match")
+      &&
+      opendCards.length < 2
+      &&
+      !opendCards.includes(event.target)
+  );
+}
+
+
+function checkForMatch(){
+  if (opendCards.length === 2){
+    console.log("two cards!");
+    if (opendCards[0].firstElementChild.className === opendCards[1].firstElementChild.className){
+      console.log("matched");
+      opendCards[0].classList.toggle("match");
+      opendCards[1].classList.toggle("match");
+      opendCards = [];
+    }else {
+       setTimeout(()=>{
+         console.log("not matched!");
+         toggleCard(opendCards[0]);
+         toggleCard(opendCards[1]);
+         opendCards = [];
+       },1000);
+    }
+    addMove();
+  }
+}
+
+
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
@@ -66,25 +108,49 @@ function shuffle(array) {
  *    + if all cards have  matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
 
+function addMove(){
+  console.log("adding a move >> !");
+  moves++;
+  console.log(moves);
+  const movesText = document.querySelector(".moves");
+  console.log(movesText.innerText);
+  movesText.innerText = moves;
+}
+
+function checkScore(){
+  if(moves === 16 || moves === 24){
+    removeStar();
+  }
+}
+
+function removeStar(){
+   const stars = document.querySelectorAll(".stars li");
+   for (star of stars){
+     if( star.style.display !== "none" ){
+       star.style.display = "none";
+       break;
+     }
+   }
+
+}
 
 function clickedCard(card){
-   card.classList.add("show");
-   addToOpendCards(card);
+   toggleCard(card); // toggle the card to open or close
+   addToOpendCards(card); // add the card to the opencards to compare
+}
+
+function toggleCard(card){
+  card.classList.toggle("show");
+  card.classList.toggle("open");
 }
 
 function addToOpendCards(card){
-  opendCards.push(card);
-  console.log(opendCards);
-  console.log(opendCards.length);
-      switch (opendCards.length) {
-        case 2: if (opendCards[0].lastElementChild.className === opendCards[1].lastElementChild.className){
-          console.log("matched :)");
-          }else{
-          console.log("sorry not matched!");
-          }
-          break;
-        }
-   }
+    opendCards.push(card);
+}
+
+
+
+
 
 
 // stat the game when the body finishes loading ..
