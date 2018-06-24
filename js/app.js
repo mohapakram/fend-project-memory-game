@@ -2,18 +2,34 @@
 // declaring deck
 const deck = document.querySelector('.deck');
 
+//stars
+const stars = document.querySelectorAll(".stars li");
+
+const movesText = document.querySelector(".moves");
+
 // opend cards
 var opendCards = [];
 
 // moves
 let moves = 0;
 
+// check if clock started
+let clockOff = true;
+
+// holds time
+let time = 0;
+
+let clockId;
+
+let matches = 0;
+
+let totalMatches = 8;
+
 // declaring cards
 let card = document.querySelectorAll('.card');
 let x = document.getElementsByClassName('card');
 console.log(x);
 console.log(card);
-
 
 // initate the game
 function startGame(){
@@ -32,18 +48,51 @@ function startGame(){
    // adding event listeners for cards
 
      deck.addEventListener("click", (event)=>{
+       console.log("matches are "+matches);
        let card = event.target;
        console.log(opendCards);
           if ( isClickValid(card) ) {
+              if (clockOff) {
+                startClock();
+                clockOff = false;
+              }
             clickedCard(card);
             checkForMatch();
             checkScore();
+            if (matches === totalMatches){
+              console.log("end >>>>>>>> !!");
+              toggleModal();
+            }
           }
 
      });
 
-
 }
+
+function startClock(){
+  const clock = document.querySelector(".clock");
+  clockId = setInterval(()=>{
+    time++;
+    console.log(time);
+    clock.innerText = showTime();
+   } , 1000);
+}
+
+function showTime(){
+    let min = Math.floor(time /60);
+    let sec = time %60;
+    if (sec < 10){
+      return `${min}:0${sec}`;
+    }else {
+      return `${min}:${sec}`;
+    }
+}
+
+function stopClock(){
+  clearInterval(clockId);
+}
+
+
 
 function isClickValid(card){
   return(
@@ -57,7 +106,55 @@ function isClickValid(card){
   );
 }
 
+function toggleModal(){
+  const modal = document.querySelector(".the-modal");
+  modal.classList.toggle("hide");
+  const timeScore = document.querySelector(".timeScore");
+  const starsScore = document.querySelector(".starsScore");
+  const movesScore = document.querySelector(".movesScore");
+  let stars_score = getStars();
+  let time_score = showTime();
+  timeScore.innerText = `time : ${time_score}`;
+  movesScore.innerText = `moves : ${moves}`;
+  starsScore.innerText = `stars : ${stars_score}`
+}
 
+
+function getStars(){
+  let stars_score = 0;
+  for (star of stars){
+    if(star.style.display !== "none"){
+      stars_score++;
+    }
+  }
+  return stars_score;
+}
+
+function resetGame(){
+  matches = 0;
+  opendCards = [];
+  resetTime();
+  restMoves();
+  resetStars();
+  startGame();
+}
+
+function resetTime(){
+   stopClock();
+   clockOff = true;
+   time = 0;
+}
+
+function restMoves(){
+  moves = 0;
+  movesText.innerText = moves;
+}
+
+function resetStars(){
+  for (star of stars){
+    star.style.display = "inline";
+  }
+}
 function checkForMatch(){
   if (opendCards.length === 2){
     console.log("two cards!");
@@ -65,6 +162,7 @@ function checkForMatch(){
       console.log("matched");
       opendCards[0].classList.toggle("match");
       opendCards[1].classList.toggle("match");
+      matches++;
       opendCards = [];
     }else {
        setTimeout(()=>{
@@ -112,7 +210,6 @@ function addMove(){
   console.log("adding a move >> !");
   moves++;
   console.log(moves);
-  const movesText = document.querySelector(".moves");
   console.log(movesText.innerText);
   movesText.innerText = moves;
 }
@@ -124,7 +221,6 @@ function checkScore(){
 }
 
 function removeStar(){
-   const stars = document.querySelectorAll(".stars li");
    for (star of stars){
      if( star.style.display !== "none" ){
        star.style.display = "none";
@@ -147,11 +243,19 @@ function toggleCard(card){
 function addToOpendCards(card){
     opendCards.push(card);
 }
+function replay(){
+  resetGame();
+  toggleModal();
+}
 
+const replayBtn = document.querySelector(".replay");
+replayBtn.addEventListener("click",replay);
 
+const closeBtn = document.querySelector(".close");
+closeBtn.addEventListener("click",toggleModal);
 
-
-
+const restartBtn =  document.querySelector(".restart");
+restartBtn.addEventListener("click",resetGame);
 
 // stat the game when the body finishes loading ..
 document.body.onload = startGame();

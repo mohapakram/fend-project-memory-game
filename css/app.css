@@ -107,3 +107,36 @@ h1 {
     float: right;
     cursor: pointer;
 }
+.the-modal{
+  position: absolute;
+  top:0;
+  left:0;
+  height: 100%;
+  width:100%;
+  background: #ffffff url('../img/geometry2.png'); /* Background pattern from Subtle Patterns */
+  font-family: 'Coda', cursive;
+  z-index: 2;
+}
+.hide{
+  display: none;
+}
+.modal-body{
+  text-align: center;
+  margin-top: 15%;
+  text-transform: capitalize;s
+}
+.btn{
+  border:none;
+  padding: 2%;
+  color: white;
+  box-shadow: 5px 2px 20px 0 rgba(46, 61, 73, 0.5);
+  background: linear-gradient(160deg, #02ccba 0%, #aa7ecd 100%);
+  margin:3%;
+}
+.btn:hover{
+  box-shadow:none;
+  border-radius:15px;
+}
+.modal-footer{
+  text-align: center;
+}
