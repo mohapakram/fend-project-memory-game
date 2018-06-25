@@ -8,7 +8,7 @@ const stars = document.querySelectorAll(".stars li");
 const movesText = document.querySelector(".moves");
 
 // opend cards
-var opendCards = [];
+let opendCards = [];
 
 // moves
 let moves = 0;
@@ -28,8 +28,7 @@ let totalMatches = 8;
 // declaring cards
 let card = document.querySelectorAll('.card');
 let x = document.getElementsByClassName('card');
-console.log(x);
-console.log(card);
+
 
 // initate the game
 function startGame(){
@@ -70,12 +69,15 @@ function startGame(){
 }
 
 function startClock(){
-  const clock = document.querySelector(".clock");
   clockId = setInterval(()=>{
     time++;
-    console.log(time);
-    clock.innerText = showTime();
+    displayTime();
    } , 1000);
+}
+
+function displayTime(){
+    const clock = document.querySelector(".clock");
+    clock.innerText = showTime();
 }
 
 function showTime(){
@@ -143,6 +145,7 @@ function resetTime(){
    stopClock();
    clockOff = true;
    time = 0;
+   displayTime()
 }
 
 function restMoves(){
